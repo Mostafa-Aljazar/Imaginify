@@ -1,26 +1,123 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
+/* ShadCN Theme */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+
+  /* Violet-based palette */
+  --background: oklch(99.107% 0.00011 271.152);
+  --foreground: oklch(0.1 0.05 275);
+  --card: oklch(0.95 0.1 275);
+  --card-foreground: oklch(0.15 0.05 275);
+  --popover: oklch(0.97 0.07 275);
+  --popover-foreground: oklch(0.15 0.05 275);
+  --primary: oklch(0.55 0.3 270);
+  --primary-foreground: oklch(0.98 0 275);
+  --secondary: oklch(0.65 0.2 280);
+  --secondary-foreground: oklch(0.98 0 275);
+  --accent: oklch(0.70 0.25 280);
+  --accent-foreground: oklch(0.98 0 275);
+  --destructive: oklch(0.65 0.3 10);
+  --border: oklch(0.75 0.1 275);
+  --input: oklch(0.78 0.1 275);
+  --ring: oklch(0.6 0.25 275);
+
+  /* Sidebar & charts */
+  --sidebar: oklch(0.92 0.05 275);
+  --sidebar-foreground: oklch(0.15 0.05 275);
+  --sidebar-primary: oklch(0.55 0.3 270);
+  --sidebar-primary-foreground: oklch(0.98 0 275);
+  --sidebar-accent: oklch(0.70 0.25 280);
+  --sidebar-accent-foreground: oklch(0.98 0 275);
+  --sidebar-border: oklch(0.75 0.1 275);
+  --sidebar-ring: oklch(0.6 0.25 275);
+
+  --chart-1: oklch(0.55 0.25 270);
+  --chart-2: oklch(0.65 0.2 280);
+  --chart-3: oklch(0.70 0.3 290);
+  --chart-4: oklch(0.75 0.25 300);
+  --chart-5: oklch(0.80 0.2 310);
+}
+
+/* Dark Mode */
+.dark {
+  --background: oklch(0.12 0.05 275);
+  --foreground: oklch(0.95 0 275);
+  --card: oklch(0.20 0.08 275);
+  --card-foreground: oklch(0.95 0 275);
+  --popover: oklch(0.18 0.08 275);
+  --popover-foreground: oklch(0.95 0 275);
+  --primary: oklch(0.45 0.25 270);
+  --primary-foreground: oklch(0.95 0 275);
+  --secondary: oklch(0.35 0.15 280);
+  --secondary-foreground: oklch(0.95 0 275);
+  --accent: oklch(0.38 0.2 280);
+  --accent-foreground: oklch(0.95 0 275);
+  --destructive: oklch(0.60 0.3 10);
+  --border: oklch(0.2 0.05 275 / 20%);
+  --input: oklch(0.25 0.05 275 / 20%);
+  --ring: oklch(0.4 0.2 275);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
+
+  .card {
+    @apply bg-card shadow-md p-4 rounded-lg text-card-foreground;
+  }
+
+  .button-primary {
+    @apply bg-primary text-primary-foreground rounded-md px-4 py-2 hover:bg-primary/90;
+  }
+
+  .button-secondary {
+    @apply bg-secondary text-secondary-foreground rounded-md px-4 py-2 hover:bg-secondary/90;
+  }
+
+  .button-destructive {
+    @apply bg-destructive text-white rounded-md px-4 py-2 hover:bg-destructive/90;
+  }
+
+  .popover {
+    @apply bg-popover shadow-lg p-3 rounded-md text-popover-foreground;
+  }
 }
