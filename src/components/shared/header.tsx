@@ -4,9 +4,15 @@ import { useState, useEffect } from "react";
 import { AI_LOGO } from "@/assets/common";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn, UserPlus, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Header() {
+  const { isSignedIn, signOut } = useAuth();
+  const router = useRouter();
   const [showHeader, setShowHeader] = useState(true);
   const [lastScroll, setLastScroll] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,8 +41,7 @@ export default function Header() {
       } bg-background/90 backdrop-blur-md border-b border-border shadow-md`}
     >
       <div className="flex justify-between items-center mx-auto px-4 sm:px-6 md:px-12 py-3 sm:py-4 max-w-7xl">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
+        <Link href={ROUTES.PAGES.HOME} className="flex items-center gap-3">
           <Image
             src={AI_LOGO}
             alt="Imaginify Logo"
@@ -47,9 +52,8 @@ export default function Header() {
           <span className="font-bold text-primary text-xl sm:text-2xl">
             Imaginify
           </span>
-        </div>
+        </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden sm:flex items-center gap-6">
           <a
             href="#features"
@@ -71,21 +75,37 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* Desktop Buttons */}
         <div className="hidden sm:flex items-center gap-3">
-          <Button
-            size="sm"
-            variant="secondary"
-            className="hover:scale-105 transition-transform duration-200"
-          >
-            Login
-          </Button>
-          <Button
-            size="sm"
-            className="bg-primary hover:bg-primary/90 hover:scale-105 transition-all duration-200"
-          >
-            Sign Up
-          </Button>
+          {isSignedIn ? (
+            <Button
+              size="sm"
+              className="flex items-center gap-2 bg-primary hover:bg-primary/90 hover:scale-105 transition-all duration-200"
+              onClick={() => signOut()}
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="sm"
+                variant="secondary"
+                className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
+                onClick={() => router.push(ROUTES.AUTH_ROUTES.SIGN_IN)}
+              >
+                <LogIn className="w-4 h-4" />
+                Login
+              </Button>
+              <Button
+                size="sm"
+                className="flex items-center gap-2 bg-primary hover:bg-primary/90 hover:scale-105 transition-all duration-200"
+                onClick={() => router.push(ROUTES.AUTH_ROUTES.SIGN_UP)}
+              >
+                <UserPlus className="w-4 h-4" />
+                Sign Up
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -128,19 +148,48 @@ export default function Header() {
           >
             About
           </a>
-          <Button
-            size="sm"
-            variant="secondary"
-            className="mt-2 w-full hover:scale-105 transition-transform duration-200"
-          >
-            Login
-          </Button>
-          <Button
-            size="sm"
-            className="bg-primary hover:bg-primary/90 mt-2 w-full hover:scale-105 transition-all duration-200"
-          >
-            Sign Up
-          </Button>
+
+          {isSignedIn ? (
+            <Button
+              size="sm"
+              className="flex items-center gap-2 mt-2 w-full hover:scale-105 transition-transform duration-200"
+              onClick={() => signOut()}
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="sm"
+                variant="secondary"
+                className="flex items-center gap-2 mt-2 w-full hover:scale-105 transition-transform duration-200"
+                onClick={() => router.push(ROUTES.AUTH_ROUTES.SIGN_IN)}
+              >
+                <LogIn className="w-4 h-4" />
+                Login
+              </Button>
+              <Button
+                size="sm"
+                className="flex items-center gap-2 bg-primary hover:bg-primary/90 mt-2 w-full hover:scale-105 transition-all duration-200"
+                onClick={() => router.push(ROUTES.AUTH_ROUTES.SIGN_UP)}
+              >
+                <UserPlus className="w-4 h-4" />
+                Sign Up
+              </Button>
+            </>
+          )}
+
+          {isSignedIn && (
+            <Button
+              size="sm"
+              className="flex items-center gap-2 mt-2 w-full hover:scale-105 transition-transform duration-200"
+              onClick={() => signOut()}
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          )}
         </div>
       </div>
     </header>

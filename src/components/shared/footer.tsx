@@ -1,25 +1,13 @@
-"use client";
-
 import { Instagram, Mail, Twitter } from "lucide-react";
 import { Button } from "../ui/button";
 import { AI_LOGO } from "@/assets/common";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 export default function Footer() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <footer
       id="contact" // this is now the contact section
-      className={`bg-card px-4 sm:px-6 md:px-12 py-10 border-t border-border text-card-foreground transition-opacity duration-700 ${
-        visible ? "opacity-100" : "opacity-0"
-      }`}
+      className="bg-card px-4 sm:px-6 md:px-12 py-10 border-t border-border text-card-foreground transition-opacity duration-700"
     >
       <div className="gap-6 sm:gap-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-7xl">
         <div className="sm:col-span-2 md:col-span-1 animate-fade-up">
