@@ -15,7 +15,7 @@ import {
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
-const navbarLinks = [
+export const navbarLinks = [
   { name: "Start", href: ROUTES.PAGES.START, icon: Home },
   {
     name: "Image Restore",

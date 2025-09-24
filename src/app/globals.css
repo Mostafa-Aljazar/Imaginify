@@ -102,7 +102,7 @@
   }
 
   .card {
-    @apply bg-card shadow-md p-4 rounded-lg text-card-foreground;
+    @apply bg-card shadow-md rounded-lg text-card-foreground;
   }
 
   .button-primary {
