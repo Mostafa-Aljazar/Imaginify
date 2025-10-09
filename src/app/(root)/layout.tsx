@@ -8,8 +8,10 @@ export default function Layout({
 }>) {
   return (
     <div className="flex flex-row px-2 pt-16 min-h-screen">
-      <Navbar />
-      <div className="flex-1 px-2">{children}</div>
+      <div className="hidden md:flex">
+        <Navbar />
+      </div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 }

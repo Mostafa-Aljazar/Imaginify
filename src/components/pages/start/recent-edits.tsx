@@ -5,11 +5,11 @@ import { icons, Search } from "lucide-react";
 import React, { useState, useMemo, useTransition } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { navbarLinks } from "@/components/shared/navbar";
+import { NAVBAR_LINKS } from "@/constants";
 
 // Generate 25 fake edits
 const edits = Array.from({ length: 25 }, (_, i) => {
-  const types = navbarLinks.slice(1, 6);
+  const types = NAVBAR_LINKS.slice(1, 6);
   return {
     id: i + 1,
     name: `Edit ${i + 1}`,

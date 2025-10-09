@@ -2,17 +2,17 @@
 import { TransformationForm } from "@/components/pages/transformations/transformation-form";
 import Transformation_Header from "@/components/pages/transformations/transformation-header";
 import { TransformationType } from "@/constants";
-import { restoreSchema } from "@/validations/transformations-schemas";
+import { backgroundRemoveSchema } from "@/validations/transformations-schemas";
 import React from "react";
 
-export default function Restore_Transformations_Page() {
+export default function Remove_Background_Transformations_Page() {
   return (
     <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.RESTORE} />
+      <Transformation_Header type={TransformationType.BACKGROUND_REMOVE} />
 
       <TransformationForm
-        transformationType={TransformationType.RESTORE}
-        schema={restoreSchema}
+        transformationType={TransformationType.BACKGROUND_REMOVE}
+        schema={backgroundRemoveSchema}
         fields={[{ name: "title", label: "Image Title", type: "text" }]}
         onSubmit={(values) => console.log(values)}
       />
