@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { User, Transformation } from "../../generated/prisma";
+import type { User, Transformation } from "@prisma/client";
 import { getUserData } from "@/actions/get-user-data";
 
 interface UserData extends User {

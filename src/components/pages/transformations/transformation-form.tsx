@@ -65,7 +65,6 @@ export function TransformationForm({
   };
 
   const { uploadImage, loading, progress, url, error } = useCloudinaryUpload();
-  console.log("🚀 ~ TransformationForm ~ url:", url);
 
   const handleSubmit = async (values: Record<string, unknown>) => {
     console.log("handleSubmit :", values);
