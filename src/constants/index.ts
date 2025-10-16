@@ -76,30 +76,39 @@ export enum PROMPT_TYPE {
     FILL = "gen_fill",
 }
 
+
 export enum TransformationType {
-    RESTORE = "restore",
-    FILL = "fill",
-    REMOVE = "remove",
-    RECOLOR = "recolor",
-    BACKGROUND_REMOVE = "background_remove",
-    BACKGROUND_REPLACE = "background_replace",
+    RESTORE,
+    GENERATIVE_FILL,
+    OBJECT_REMOVE,
+    OBJECT_RECOLOR,
+    BACKGROUND_REMOVE,
+    BACKGROUND_REPLACE
 }
+// export enum TransformationType {
+//     RESTORE = "RESTORE",
+//     FILL = "fill",
+//     REMOVE = "remove",
+//     RECOLOR = "recolor",
+//     BACKGROUND_REMOVE = "background_remove",
+//     BACKGROUND_REPLACE = "background_replace",
+// }
 
 export const TRANSFORMATIONS_HEADER = {
     [TransformationType.RESTORE]: {
         title: "Restore Image",
         description: "Refine images by removing noise and imperfections",
     },
-    [TransformationType.FILL]: {
+    [TransformationType.GENERATIVE_FILL]: {
         title: "Generative Fill",
         description: "Enhance an image's dimensions using AI outpainting",
     },
-    [TransformationType.REMOVE]: {
+    [TransformationType.OBJECT_REMOVE]: {
         title: "Object Removal",
         description:
             "Identify and eliminate unwanted objects from your images seamlessly",
     },
-    [TransformationType.RECOLOR]: {
+    [TransformationType.OBJECT_RECOLOR]: {
         title: "Recolor Image",
         description: "Identify and recolor objects from the image",
     },

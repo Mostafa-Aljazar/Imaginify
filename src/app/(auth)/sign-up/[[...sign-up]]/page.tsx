@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { AI_LOGO } from "@/assets/common";
@@ -26,11 +26,11 @@ export default function SignUpPage() {
           {(isGlobalLoading) => (
             <>
               {/* Overlay */}
-              {isGlobalLoading && (
+              {/* {isGlobalLoading && (
                 <div className="z-50 fixed inset-0 flex justify-center items-center bg-background/70 backdrop-blur-sm">
                   <Loader className="size-10 text-primary animate-spin" />
                 </div>
-              )}
+              )} */}
 
               {/* Start step */}
               <SignUp.Step name="start">

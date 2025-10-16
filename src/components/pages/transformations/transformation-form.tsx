@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DragEvent, useState } from "react";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import useCloudinaryUpload from "@/hooks/useCloudinaryUpload";
 import { TransformationType } from "@/constants";
 
@@ -55,18 +55,17 @@ export function TransformationForm({
   });
 
   const [file, setFile] = useState<File | null>(null);
-  // console.log("🚀 ~ TransformationForm ~ file:", file);
 
   const [dragOver, setDragOver] = useState(false);
-  // const [loading, setLoading] = useState(false);
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
-    // if (e.dataTransfer.files[0]) console.log(e.dataTransfer.files[0]);
   };
+
   const { uploadImage, loading, progress, url, error } = useCloudinaryUpload();
+  console.log("🚀 ~ TransformationForm ~ url:", url);
 
   const handleSubmit = async (values: Record<string, unknown>) => {
     console.log("handleSubmit :", values);
@@ -219,7 +218,7 @@ export function TransformationForm({
               )}
 
               {/* Error Message */}
-              {error && <p className="text-red-500">{error}</p>}
+              {error && <p className="text-red-500">Error : {error}</p>}
 
               {/* Uploaded Image */}
               {url && (

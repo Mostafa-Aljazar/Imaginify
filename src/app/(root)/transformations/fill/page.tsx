@@ -8,10 +8,10 @@ import React from "react";
 export default function Fill_Transformations_Page() {
   return (
     <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.FILL} />
+      <Transformation_Header type={TransformationType.GENERATIVE_FILL} />
 
       <TransformationForm
-        transformationType={TransformationType.FILL}
+        transformationType={TransformationType.GENERATIVE_FILL}
         schema={generativeFillSchema}
         fields={[
           { name: "title", label: "Image Title", type: "text" },

@@ -7,10 +7,10 @@ import { objectRemoveSchema } from "@/validations/transformations-schemas";
 export default function Remove_Transformations_Page() {
   return (
     <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.REMOVE} />
+      <Transformation_Header type={TransformationType.OBJECT_REMOVE} />
 
       <TransformationForm
-        transformationType={TransformationType.REMOVE}
+        transformationType={TransformationType.OBJECT_REMOVE}
         schema={objectRemoveSchema}
         fields={[
           { name: "title", label: "Image Title", type: "text" },

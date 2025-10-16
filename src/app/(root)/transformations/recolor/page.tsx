@@ -8,10 +8,10 @@ import React from "react";
 export default function Recolor_Transformations_Page() {
   return (
     <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.RECOLOR} />
+      <Transformation_Header type={TransformationType.OBJECT_RECOLOR} />
 
       <TransformationForm
-        transformationType={TransformationType.RECOLOR}
+        transformationType={TransformationType.OBJECT_RECOLOR}
         schema={objectRecolorSchema}
         fields={[
           { name: "title", label: "Image Title", type: "text" },

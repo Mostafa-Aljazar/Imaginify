@@ -1,5 +1,5 @@
 import { NAVBAR_LINKS } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { Sparkles } from "lucide-react";
 
 export default function Hero_Section() {

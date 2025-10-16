@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { NAVBAR_LINKS, ROUTES } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { LogIn, LogOut, UserPlus } from "lucide-react";

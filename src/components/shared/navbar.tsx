@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { NAVBAR_LINKS } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 export default function Navbar() {
   const pathname = usePathname();
