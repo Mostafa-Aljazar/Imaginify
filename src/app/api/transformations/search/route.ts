@@ -1,98 +1,77 @@
 import { prisma } from "@/lib/prisma";
-import { v2 as cloudinary } from "cloudinary";
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-    api_key: process.env.CLOUDINARY_API_KEY!,
-    api_secret: process.env.CLOUDINARY_API_SECRET!,
-    secure: true,
-});
+import { getAuth } from "@clerk/nextjs/server";
 
 export async function GET(req: NextRequest) {
     try {
+        const { userId: userIdLogin } = getAuth(req);
+
+        if (!userIdLogin)
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const user = await prisma.user.findUnique({
+            where: { clerkId: userIdLogin },
+        });
+
+        if (!user)
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+
         const { searchParams } = new URL(req.url);
         const q = (searchParams.get("q") || "").trim();
         const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
         const limit = Math.min(24, parseInt(searchParams.get("limit") || "12"));
 
-        if (q.length > 100)
-            return NextResponse.json(
-                { success: false, error: "Query too long" },
-                { status: 400 }
-            );
-
-        let cloudResults: any[] = [];
-
-
-        const expression = q
-            ? `folder=imaginify AND tags=${q}`
-            : "folder=imaginify";
-
-        const result = await cloudinary.search
-            .expression(expression)
-            .sort_by("created_at", "desc")
-            .max_results(100)
-            .execute();
-
-        cloudResults = result.resources || [];
-
-        const urls = cloudResults.map((r) => r.secure_url);
-
-        const dbResults = await prisma.transformation.findMany({
-            where: q
+        const whereCondition: Prisma.TransformationWhereInput = {
+            userId: user.id,
+            ...(q
                 ? {
                     OR: [
-                        { title: { contains: q, mode: "insensitive" } },
-                        { url: { in: urls } },
-                        { originalUrl: { in: urls } },
+                        { title: { contains: q, mode: Prisma.QueryMode.insensitive } },
+                        { prompt: { contains: q, mode: Prisma.QueryMode.insensitive } },
+                        { url: { contains: q, mode: Prisma.QueryMode.insensitive } },
                     ],
                 }
-                : {},
-            orderBy: { createdAt: "desc" },
-        });
+                : {}),
+        };
 
-        const merged = [
-            ...dbResults.map((d) => ({
-                id: d.id,
-                title: d.title,
-                url: d.url,
-                createdAt: d.createdAt,
-            })),
-            ...cloudResults
-                .filter(
-                    (r) =>
-                        !dbResults.some(
-                            (d) => d.url === r.secure_url || d.originalUrl === r.secure_url
-                        )
-                )
-                .map((r) => ({
-                    id: r.asset_id,
-                    title: r.filename || r.public_id,
-                    url: r.secure_url,
-                    createdAt: r.created_at,
-                })),
-        ];
+        const [dbResults, total] = await Promise.all([
+            prisma.transformation.findMany({
+                where: whereCondition,
+                select: {
+                    id: true,
+                    title: true,
+                    url: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+                orderBy: { createdAt: "desc" },
+                skip: (page - 1) * limit,
+                take: limit,
+            }),
+            prisma.transformation.count({ where: whereCondition }),
+        ]);
 
-        const total = merged.length;
         const totalPages = Math.ceil(total / limit);
-        const paginated = merged.slice((page - 1) * limit, page * limit);
+
+        console.log(
+            `Search completed: query=${q}, results=${dbResults.length}, page=${page}`
+        );
 
         return NextResponse.json({
             success: true,
-            data: paginated,
+            data: dbResults,
             total,
             page,
             limit,
             totalPages,
         });
-    } catch (err) {
+    } catch (err: any) {
         console.error("Search API Error:", err);
-        return NextResponse.json(
-            { success: false, error: "Internal Server Error" },
-            { status: 500 }
-        );
+        const message =
+            err.name === "PrismaClientKnownRequestError"
+                ? "Database query failed"
+                : "Internal Server Error";
+        return NextResponse.json({ success: false, error: message }, { status: 500 });
     }
 }
-
-

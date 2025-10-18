@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import type { User, Transformation } from "@prisma/client";
-import { getUserData } from "@/actions/get-user-data";
 
 interface UserData extends User {
   transformations: Transformation[];
@@ -25,10 +24,11 @@ export const useUserStore = create<UserStore>((set) => ({
   clearUser: () => set({ user: null }),
 
   fetchUser: async (clerkId: string) => {
-    const data = await getUserData({ userClerkId: clerkId });
+    const res = await fetch(`/api/user?clerkId=${clerkId}`);
+    if (!res.ok) return;
+    const data = await res.json();
     if (data) set({ user: data });
   },
-
   addTransformation: (transformation: Transformation) =>
     set((prev) => ({
       user: prev.user

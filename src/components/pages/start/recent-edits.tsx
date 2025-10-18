@@ -1,4 +1,3 @@
-// components/RecentEdits.tsx
 "use client";
 
 import React, { useEffect, useState, useTransition } from "react";

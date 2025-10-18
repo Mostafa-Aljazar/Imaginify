@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
                 type: type as any,
                 url: transformedUrl,
                 originalUrl: uploaded.secure_url,
-                metadata: { ...metadata, tags: uploaded.tags || [] }, // Store tags
+                metadata: { ...metadata, tags: uploaded.tags || [metadata?.effect] }, // Store tags
             },
         });
 
