@@ -4,28 +4,16 @@ import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
-// Credit amounts for each plan
-const CREDIT_PACKAGES = {
-    'Pro Package': 120,
-    'Premium Package': 2000,
-} as const;
-
 export async function POST(req: NextRequest) {
     const body = await req.text();
     const signature = (await headers()).get('stripe-signature');
 
     if (!signature) {
-        return NextResponse.json(
-            { error: 'No signature provided' },
-            { status: 400 }
-        );
+        return NextResponse.json({ error: 'No signature provided' }, { status: 400 });
     }
 
     if (!process.env.STRIPE_WEBHOOK_SECRET) {
-        return NextResponse.json(
-            { error: 'Webhook secret not configured' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
     }
 
     let event: Stripe.Event;
@@ -38,72 +26,80 @@ export async function POST(req: NextRequest) {
         );
     } catch (error: any) {
         console.error('Webhook signature verification failed:', error.message);
-        return NextResponse.json(
-            { error: `Webhook Error: ${error.message}` },
-            { status: 400 }
-        );
+        return NextResponse.json({ error: `Webhook Error: ${error.message}` }, { status: 400 });
     }
 
-    console.log('🚀 Webhook event received:', event.type);
 
-    // Handle the event
     switch (event.type) {
         case 'checkout.session.completed':
             const session = event.data.object as Stripe.Checkout.Session;
-            console.log('✅ Payment successful:', session.id);
-            console.log('Customer email:', session.customer_details?.email);
+            console.log('✅ Checkout session completed:', session.id);
 
             try {
-                // Parse items from metadata to get plan details
-                if (session.metadata?.items) {
-                    const items = JSON.parse(session.metadata.items);
-                    const planName = items[0]?.name as keyof typeof CREDIT_PACKAGES;
-                    const customerEmail = session.customer_details?.email;
+                // Check if this webhook has already been processed
+                const existingWebhook = await prisma.processedWebhook.findUnique({
+                    where: { sessionId: session.id },
+                });
 
-                    console.log('📦 Plan purchased:', planName);
-                    console.log('💳 Credits to add:', CREDIT_PACKAGES[planName]);
+                if (existingWebhook) {
+                    console.log(`⚠️ Webhook already processed for session: ${session.id}`);
+                    return NextResponse.json({
+                        received: true,
+                        message: 'Webhook already processed'
+                    });
+                }
 
-                    if (customerEmail && planName && CREDIT_PACKAGES[planName]) {
-                        // Find user by email and update credits
+                const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+                    expand: ['line_items.data.price.product'],
+                });
+
+                if (fullSession.payment_status === 'paid') {
+                    const product = fullSession.line_items?.data[0].price?.product as Stripe.Product;
+                    const creditsToAdd = parseInt(product.metadata.credits || '0');
+                    const customerEmail = session.customer_email;
+
+                    if (customerEmail && creditsToAdd > 0) {
                         const user = await prisma.user.findUnique({
                             where: { email: customerEmail },
                         });
 
                         if (user) {
-                            const creditsToAdd = CREDIT_PACKAGES[planName];
-
-                            // Update user credits
-                            const updatedUser = await prisma.user.update({
-                                where: { email: customerEmail },
-                                data: {
-                                    creditsAvailable: {
-                                        increment: creditsToAdd,
+                            // Use a transaction to ensure both operations succeed or fail together
+                            await prisma.$transaction(async (tx) => {
+                                // Update user credits
+                                const updatedUser = await tx.user.update({
+                                    where: { email: customerEmail },
+                                    data: {
+                                        creditsAvailable: { increment: creditsToAdd },
                                     },
-                                },
-                            });
+                                });
+                                console.log(`💳 User ${updatedUser.email} now has ${updatedUser.creditsAvailable} credits`);
 
-                            console.log('✅ Credits added successfully!');
-                            console.log(`User ${updatedUser.email} now has ${updatedUser.creditsAvailable} credits`);
+                                // Mark webhook as processed
+                                await tx.processedWebhook.create({
+                                    data: {
+                                        sessionId: session.id,
+                                    },
+                                });
+                                console.log(`✅ Webhook marked as processed for session: ${session.id}`);
+                            });
                         } else {
                             console.error('❌ User not found with email:', customerEmail);
-                            // Optionally create a new user here
-                            // const newUser = await prisma.user.create({ ... });
                         }
+                    } else {
+                        console.warn('⚠️ No credits to add or customer email missing');
                     }
+                } else {
+                    console.log(`⏳ Payment not completed yet. Status: ${fullSession.payment_status}`);
                 }
-            } catch (error) {
-                console.error('❌ Error processing payment:', error);
+            } catch (error: any) {
+                console.error('❌ Error processing checkout session:', error);
+                // Return 500 so Stripe will retry the webhook
+                return NextResponse.json(
+                    { error: 'Failed to process webhook' },
+                    { status: 500 }
+                );
             }
-            break;
-
-        case 'payment_intent.succeeded':
-            const paymentIntent = event.data.object as Stripe.PaymentIntent;
-            console.log('✅ PaymentIntent succeeded:', paymentIntent.id);
-            break;
-
-        case 'payment_intent.payment_failed':
-            const failedPayment = event.data.object as Stripe.PaymentIntent;
-            console.log('❌ Payment failed:', failedPayment.id);
             break;
 
         default:

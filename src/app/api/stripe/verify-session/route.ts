@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
         }
 
         const session = await stripe.checkout.sessions.retrieve(sessionId);
-        console.log("🚀 ~ GET ~ session:", session)
 
         // Parse items from metadata to get plan name
         let planName = null;
@@ -29,7 +28,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({
             status: session.payment_status,
             planName: planName,
-            amount: session.amount_total,
+            amount: session.amount_total ? session.amount_total / 100 : 0,
             currency: session.currency,
         });
     } catch (error: any) {

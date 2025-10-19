@@ -21,7 +21,7 @@ model User {
   clerkId                String           @unique
   name                   String
   email                  String           @unique
-  creditsAvailable       Int              @default(0)
+  creditsAvailable       Int              @default(20)
   imageManipulationsDone Int              @default(0)
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @updatedAt
@@ -41,4 +41,11 @@ model Transformation {
   metadata    Json?
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
+}
+
+// Webhooks can be triggered multiple times for the same event. To prevent duplicate credit updates
+model ProcessedWebhook {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId   String   @unique
+  processedAt DateTime @default(now())
 }

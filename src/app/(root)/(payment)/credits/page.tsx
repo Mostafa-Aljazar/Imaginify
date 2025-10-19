@@ -1,41 +1,42 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, X, Zap, Loader2 } from "lucide-react";
+import { Check, X, Zap } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { useState } from "react";
 import { toast } from "sonner";
 import { Product } from "@/types";
+import Image from "next/image";
+import { LOGO } from "@/assets/common";
 
-// Stripe Price IDs (replace with actual IDs from Stripe Dashboard)
-const STRIPE_PRICE_IDS = {
-  pro: "price_1SJYflEv8q3aoRJA2QOqoGiN", // Replace with your Pro package Price ID
-  premium: "price_1SJYbeEv8q3aoRJA9XwJ0jqm", // Replace with your Premium package Price ID
-};
-
-// Define plans as products
 const plans: Product[] = [
   {
     id: "free",
     name: "Free",
     description: "20 Free Credits",
     price: 0,
+    credits: 20,
     quantity: 1,
+    imageUrl: "",
   },
   {
-    id: STRIPE_PRICE_IDS.pro,
+    id: "pro",
     name: "Pro Package",
     description: "120 Credits",
     price: 40,
+    credits: 120,
     quantity: 1,
+    imageUrl: "",
   },
   {
-    id: STRIPE_PRICE_IDS.premium,
+    id: "premium",
     name: "Premium Package",
     description: "2000 Credits",
     price: 199,
+    credits: 2000,
     quantity: 1,
+    imageUrl: "",
   },
 ];
 
@@ -48,42 +49,32 @@ export default function PricingSection() {
       return;
     }
 
-    setLoadingPlan(product.name);
-
+    setLoadingPlan(product.id);
     try {
-      // Call API to create checkout session
-      const response = await fetch("/api/stripe/checkout_sessions", {
+      const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ items: [product] }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item: product }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create checkout session");
       }
 
-      const data = await response.json();
+      const { url } = await response.json();
 
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      // Redirect to Stripe Checkout using the session URL
-      // No longer using stripe.redirectToCheckout() - it's been removed in API 2025-09-30.clover
-      if (data.url) {
-        window.location.href = data.url;
+      // Use window.location.href instead of redirectToCheckout
+      if (url) {
+        window.location.href = url;
       } else {
         throw new Error("No checkout URL returned");
       }
-    } catch (error: any) {
-      console.error("Checkout error:", error);
-      toast.error(
-        error.message || "Failed to start checkout. Please try again."
-      );
+    } catch (err: any) {
+      toast.error(err.message);
       setLoadingPlan(null);
     }
+    // Note: Don't set loadingPlan to null here as the page will redirect
   };
 
   return (
@@ -104,7 +95,14 @@ export default function PricingSection() {
             className="flex flex-col justify-between bg-secondary-foreground shadow-lg hover:shadow-2xl border-gray-200 transition-all"
           >
             <CardHeader className="flex flex-col items-center">
-              <div className="flex justify-center items-center bg-primary/10 mb-3 rounded-full w-12 h-12">
+              <Image
+                src={LOGO}
+                alt={`${plan.name} image`}
+                width={100}
+                height={100}
+                className="rounded-t-lg object-cover"
+              />
+              <div className="flex justify-center items-center bg-primary/10 mt-4 mb-3 rounded-full w-12 h-12">
                 <Zap className="w-5 h-5 text-primary" />
               </div>
               <CardTitle className="font-semibold text-xl">
@@ -128,7 +126,7 @@ export default function PricingSection() {
                   },
                   {
                     label: "Priority Updates",
-                    included: plan.name === "Premium Package",
+                    included: plan.name.includes("Premium"),
                   },
                 ].map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
@@ -152,7 +150,7 @@ export default function PricingSection() {
 
               <Button
                 variant={plan.price === 0 ? "outline" : "default"}
-                disabled={plan.price === 0 || loadingPlan === plan.name}
+                disabled={plan.price === 0 || loadingPlan === plan.id}
                 onClick={() => handlePurchase(plan)}
                 className={cn(
                   "bg-primary hover:bg-primary/90 mt-4 rounded-xl w-full font-semibold text-white",
@@ -160,16 +158,11 @@ export default function PricingSection() {
                     "text-primary bg-transparent hover:bg-gray-300 cursor-not-allowed"
                 )}
               >
-                {loadingPlan === plan.name ? (
-                  <>
-                    <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : plan.price === 0 ? (
-                  "Current Plan"
-                ) : (
-                  "Buy Credits"
-                )}
+                {loadingPlan === plan.id
+                  ? "Processing..."
+                  : plan.price === 0
+                  ? "Current Plan"
+                  : "Buy Credits"}
               </Button>
             </CardContent>
           </Card>
