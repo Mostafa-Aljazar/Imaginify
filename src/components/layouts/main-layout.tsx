@@ -1,5 +1,6 @@
 import Header from "@/components/shared/header";
 import Footer from "@/components/shared/footer";
+import { Toaster } from "../ui/sonner";
 
 export default function Main_Layout({
   children,
@@ -10,6 +11,8 @@ export default function Main_Layout({
     <>
       <Header />
       {children}
+      <Toaster />
+
       <Footer />
     </>
   );
