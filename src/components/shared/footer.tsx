@@ -9,7 +9,7 @@ export default function Footer() {
       id="contact" // this is now the contact section
       className="bg-card px-4 sm:px-6 md:px-12 py-10 border-t border-border text-card-foreground transition-opacity duration-700"
     >
-      <div className="gap-6 sm:gap-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-7xl">
+      <div className="gap-6 sm:gap-6 grid grid-cols-1 sm:grid-cols-3 mx-auto max-w-7xl">
         <div className="sm:col-span-2 md:col-span-1 animate-fade-up">
           <div className="flex items-center gap-2 mb-3">
             <Image src={AI_LOGO} alt="Imaginify Logo" width={28} height={28} />
@@ -19,24 +19,6 @@ export default function Footer() {
             Empowering creativity with AI-powered image editing tools for
             everyone.
           </p>
-        </div>
-
-        <div className="animate-fade-up delay-100">
-          <h3 className="mb-3 font-semibold text-foreground text-base">
-            Quick Links
-          </h3>
-          <ul className="space-y-1.5 text-sm">
-            {["Features", "Pricing", "About", "Contact"].map((link) => (
-              <li key={link}>
-                <a
-                  href={`#${link.toLowerCase()}`}
-                  className="text-muted-foreground hover:text-primary transition-all hover:translate-x-1 duration-300"
-                >
-                  {link}
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="animate-fade-up delay-200">

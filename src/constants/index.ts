@@ -30,8 +30,8 @@ export const ROUTES = {
     }
 } as const;
 
-export const NAVBAR_LINKS = [
-    { name: "Start", href: ROUTES.PAGES.START, icon: Home },
+
+export const TRANSFORMATIONS_LINKS = [
     {
         name: "Image Restore",
         href: ROUTES.PAGES.TRANSFORMATIONS_RESTORE,
@@ -62,7 +62,12 @@ export const NAVBAR_LINKS = [
         href: ROUTES.PAGES.TRANSFORMATIONS_REPLACE_BACKGROUND,
         icon: ImagesIcon,
     },
+] as const;
 
+
+export const NAVBAR_LINKS = [
+    { name: "Start", href: ROUTES.PAGES.START, icon: Home },
+    ...TRANSFORMATIONS_LINKS,
     { name: "Profile", href: ROUTES.PAGES.PROFILE, icon: UserIcon },
     { name: "Buy Credits", href: ROUTES.PAGES.CREDITS, icon: CreditCard },
 ] as const;

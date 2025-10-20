@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
 
-export default function Hero_Section() {
+export default function HomeHeroSection() {
   const router = useRouter();
 
   return (

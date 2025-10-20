@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
@@ -22,18 +21,19 @@ export async function GET(req: NextRequest) {
         const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
         const limit = Math.min(24, parseInt(searchParams.get("limit") || "12"));
 
-        const whereCondition: Prisma.TransformationWhereInput = {
+        // Build where condition without importing Prisma namespace
+        const whereCondition: any = {
             userId: user.id,
-            ...(q
-                ? {
-                    OR: [
-                        { title: { contains: q, mode: Prisma.QueryMode.insensitive } },
-                        { prompt: { contains: q, mode: Prisma.QueryMode.insensitive } },
-                        { url: { contains: q, mode: Prisma.QueryMode.insensitive } },
-                    ],
-                }
-                : {}),
         };
+
+        // Add search conditions if query exists
+        if (q) {
+            whereCondition.OR = [
+                { title: { contains: q, mode: "insensitive" } },
+                { prompt: { contains: q, mode: "insensitive" } },
+                { url: { contains: q, mode: "insensitive" } },
+            ];
+        }
 
         const [dbResults, total] = await Promise.all([
             prisma.transformation.findMany({

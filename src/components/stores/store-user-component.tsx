@@ -6,7 +6,7 @@ import { useUserStore } from "@/stores/store-user-data";
 
 export default function StoreUserComponent() {
   const { userId } = useAuth();
-  const { fetchUser, user: storedUser } = useUserStore();
+  const { fetchUser } = useUserStore();
 
   useEffect(() => {
     if (!userId) return;

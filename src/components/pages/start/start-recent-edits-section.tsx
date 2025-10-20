@@ -13,7 +13,7 @@ type Edit = {
   tags: string[];
 };
 
-export default function RecentEdits() {
+export default function StartRecentEditsSection() {
   const [query, setQuery] = useState("");
   const [edits, setEdits] = useState<Edit[]>([]);
   const [error, setError] = useState("");
