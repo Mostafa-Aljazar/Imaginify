@@ -1,27 +1,43 @@
-"use client";
-import { TransformationForm } from "@/components/pages/transformations/transformation-form";
-import Transformation_Header from "@/components/pages/transformations/transformation-header";
-import { TransformationType } from "@/constants";
-import { objectRemoveSchema } from "@/validations/transformations-schemas";
+import { FAVICON } from "@/assets/common";
+import Remove_Transformations_Page from "@/components/pages/transformations/remove/page";
+import { APP_URL, ROUTES } from "@/constants";
+import { Metadata } from "next";
 
-export default function Remove_Transformations_Page() {
-  return (
-    <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.OBJECT_REMOVE} />
+const FALLBACK = {
+  TITLE: "Object Remove | Imaginify",
+  DESCRIPTION:
+    "Remove unwanted objects from your images seamlessly using AI with Imaginify. Enhance your visuals instantly and effortlessly.",
+  IMAGE: FAVICON.src,
+};
 
-      <TransformationForm
-        transformationType={TransformationType.OBJECT_REMOVE}
-        schema={objectRemoveSchema}
-        fields={[
-          { name: "title", label: "Image Title", type: "text" },
-          {
-            name: "object_to_remove",
-            label: "Object to Remove",
-            type: "text",
-          },
-        ]}
-        onSubmit={(values) => console.log(values)}
-      />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: FALLBACK.TITLE,
+  description: FALLBACK.DESCRIPTION,
+  metadataBase: new URL(APP_URL),
+  openGraph: {
+    siteName: "Imaginify",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    url: `${APP_URL + ROUTES.PAGES.TRANSFORMATIONS_REMOVE}`,
+    images: [
+      {
+        url: FALLBACK.IMAGE,
+        width: 64,
+        height: 64,
+        alt: "Imaginify favicon",
+      },
+    ],
+    locale: "en",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    images: [FALLBACK.IMAGE],
+  },
+};
+
+export default function Remove_Page() {
+  return <Remove_Transformations_Page />;
 }

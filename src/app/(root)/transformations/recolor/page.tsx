@@ -1,33 +1,43 @@
-"use client";
-import { TransformationForm } from "@/components/pages/transformations/transformation-form";
-import Transformation_Header from "@/components/pages/transformations/transformation-header";
-import { TransformationType } from "@/constants";
-import { objectRecolorSchema } from "@/validations/transformations-schemas";
-import React from "react";
+import { FAVICON } from "@/assets/common";
+import Recolor_Transformations_Page from "@/components/pages/transformations/recolor/page";
+import { APP_URL, ROUTES } from "@/constants";
+import { Metadata } from "next";
 
-export default function Recolor_Transformations_Page() {
-  return (
-    <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.OBJECT_RECOLOR} />
+const FALLBACK = {
+  TITLE: "Object Recolor | Imaginify",
+  DESCRIPTION:
+    "Recolor specific objects in your images using AI with Imaginify. Change colors seamlessly and enhance your images instantly.",
+  IMAGE: FAVICON.src,
+};
 
-      <TransformationForm
-        transformationType={TransformationType.OBJECT_RECOLOR}
-        schema={objectRecolorSchema}
-        fields={[
-          { name: "title", label: "Image Title", type: "text" },
-          {
-            name: "object_to_recolor",
-            label: "Object to Recolor",
-            type: "text",
-          },
-          {
-            name: "replacement_color",
-            label: "Replacement Color",
-            type: "text",
-          },
-        ]}
-        onSubmit={(values) => console.log(values)}
-      />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: FALLBACK.TITLE,
+  description: FALLBACK.DESCRIPTION,
+  metadataBase: new URL(APP_URL),
+  openGraph: {
+    siteName: "Imaginify",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    url: `${APP_URL + ROUTES.PAGES.TRANSFORMATIONS_RECOLOR}`,
+    images: [
+      {
+        url: FALLBACK.IMAGE,
+        width: 64,
+        height: 64,
+        alt: "Imaginify favicon",
+      },
+    ],
+    locale: "en",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    images: [FALLBACK.IMAGE],
+  },
+};
+
+export default function Recolor_Page() {
+  return <Recolor_Transformations_Page />;
 }

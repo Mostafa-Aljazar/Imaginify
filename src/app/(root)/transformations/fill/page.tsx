@@ -1,41 +1,44 @@
-"use client";
-import { TransformationForm } from "@/components/pages/transformations/transformation-form";
-import Transformation_Header from "@/components/pages/transformations/transformation-header";
-import { TransformationType } from "@/constants";
-import { generativeFillSchema } from "@/validations/transformations-schemas";
+import { FAVICON } from "@/assets/common";
+import Fill_Transformations_Page from "@/components/pages/transformations/fill/fill-page";
+import { APP_URL, ROUTES } from "@/constants";
+import { Metadata } from "next";
 import React from "react";
 
-export default function Fill_Transformations_Page() {
-  return (
-    <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.GENERATIVE_FILL} />
+const FALLBACK = {
+  TITLE: "Generative Fill | Imaginify",
+  DESCRIPTION:
+    "Enhance your images with AI-powered generative fill. Add new elements or expand your images seamlessly using Imaginify.",
+  IMAGE: FAVICON.src,
+};
 
-      <TransformationForm
-        transformationType={TransformationType.GENERATIVE_FILL}
-        schema={generativeFillSchema}
-        fields={[
-          { name: "title", label: "Image Title", type: "text" },
-          {
-            name: "new_additions",
-            label: "Additions",
-            type: "text",
-            placeholder: "e.g., A box of cookies",
-          },
-          {
-            name: "aspect_ratio",
-            label: "Aspect Ratio",
-            type: "select",
-            options: [
-              { label: "Square (1:1)", value: "1:1" },
-              { label: "Standard Portrait (3:4)", value: "3:4" },
-              { label: "Phone Portrait (9:16)", value: "9:16" },
-              { label: "Standard Landscape (4:3)", value: "4:3" },
-              { label: "Widescreen (16:9)", value: "16:9" },
-            ],
-          },
-        ]}
-        onSubmit={(values) => console.log(values)}
-      />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: FALLBACK.TITLE,
+  description: FALLBACK.DESCRIPTION,
+  metadataBase: new URL(APP_URL),
+  openGraph: {
+    siteName: "Imaginify",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    url: `${APP_URL + ROUTES.PAGES.TRANSFORMATIONS_FILL}`,
+    images: [
+      {
+        url: FALLBACK.IMAGE,
+        width: 64,
+        height: 64,
+        alt: "Imaginify favicon",
+      },
+    ],
+    locale: "en",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    images: [FALLBACK.IMAGE],
+  },
+};
+
+export default function Fill_Page() {
+  return <Fill_Transformations_Page />;
 }

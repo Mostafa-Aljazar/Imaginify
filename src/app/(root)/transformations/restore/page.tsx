@@ -1,21 +1,44 @@
-"use client";
-import { TransformationForm } from "@/components/pages/transformations/transformation-form";
-import Transformation_Header from "@/components/pages/transformations/transformation-header";
-import { TransformationType } from "@/constants";
-import { restoreSchema } from "@/validations/transformations-schemas";
+import { FAVICON } from "@/assets/common";
+import Restore_Transformations_Page from "@/components/pages/transformations/restore/page";
+import { APP_URL, ROUTES } from "@/constants";
+import { Metadata } from "next";
 import React from "react";
 
-export default function Restore_Transformations_Page() {
-  return (
-    <div className="flex flex-col gap-8 p-2 md:p-4 h-full">
-      <Transformation_Header type={TransformationType.RESTORE} />
+const FALLBACK = {
+  TITLE: "Image Restore | Imaginify",
+  DESCRIPTION:
+    "Restore and enhance your images using AI with Imaginify. Remove noise, fix imperfections, and improve image quality instantly.",
+  IMAGE: FAVICON.src,
+};
 
-      <TransformationForm
-        transformationType={TransformationType.RESTORE}
-        schema={restoreSchema}
-        fields={[{ name: "title", label: "Image Title", type: "text" }]}
-        onSubmit={(values) => console.log(values)}
-      />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: FALLBACK.TITLE,
+  description: FALLBACK.DESCRIPTION,
+  metadataBase: new URL(APP_URL),
+  openGraph: {
+    siteName: "Imaginify",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    url: `${APP_URL + ROUTES.PAGES.TRANSFORMATIONS_RESTORE}`,
+    images: [
+      {
+        url: FALLBACK.IMAGE,
+        width: 64,
+        height: 64,
+        alt: "Imaginify favicon",
+      },
+    ],
+    locale: "en",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: FALLBACK.TITLE,
+    description: FALLBACK.DESCRIPTION,
+    images: [FALLBACK.IMAGE],
+  },
+};
+
+export default function Restore_Page() {
+  return <Restore_Transformations_Page />;
 }

@@ -10,6 +10,8 @@ import {
     Images as ImagesIcon,
 } from "lucide-react";
 
+export const APP_URL = process.env.APP_URL || 'https://imaginify-k9g5.onrender.com/';
+
 export const ROUTES = {
     AUTH_ROUTES: {
         SIGN_IN: "/sign-in",

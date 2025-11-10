@@ -39,7 +39,6 @@ interface TransformationFormProps {
   schema: z.ZodObject<any>;
   defaultValues?: Record<string, any>;
   fields: FieldConfig[];
-  onSubmit: (values: any) => void;
 }
 
 export function TransformationForm({
@@ -47,7 +46,6 @@ export function TransformationForm({
   schema,
   defaultValues,
   fields,
-  onSubmit,
 }: TransformationFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
