@@ -13,7 +13,7 @@ export default function Main_Layout({
       {children}
       <Toaster />
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
