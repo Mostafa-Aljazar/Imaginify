@@ -63,11 +63,18 @@ export default function PricingSection() {
       }
 
       const { url } = await response.json();
-      if (url) window.location.href = url;
+
+      // Use window.location.href instead of redirectToCheckout
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
     } catch (err: any) {
       toast.error(err.message);
       setLoadingPlan(null);
     }
+    // Note: Don't set loadingPlan to null here as the page will redirect
   };
 
   return (
@@ -81,25 +88,19 @@ export default function PricingSection() {
         </p>
       </div>
 
-      <div className="gap-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
-        {plans.map((plan) => (
+      <div className="gap-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
+        {plans.map((plan, idx) => (
           <Card
-            key={plan.id}
-            className="flex flex-col justify-between shadow-lg hover:shadow-2xl p-6 border border-gray-200 rounded-2xl transition-all"
-            style={{
-              background:
-                plan.name === "Premium"
-                  ? "linear-gradient(135deg, #fcd34d, #f97316)"
-                  : "#ffffff",
-            }}
+            key={idx}
+            className="flex flex-col justify-between bg-secondary-foreground shadow-lg hover:shadow-2xl border-gray-200 transition-all"
           >
             <CardHeader className="flex flex-col items-center">
               <Image
                 src={LOGO}
-                alt={`${plan.name} logo`}
-                width={80}
-                height={80}
-                className="rounded-full object-cover"
+                alt={`${plan.name} image`}
+                width={100}
+                height={100}
+                className="rounded-t-lg object-cover"
               />
               <div className="flex justify-center items-center bg-primary/10 mt-4 mb-3 rounded-full w-12 h-12">
                 <Zap className="w-5 h-5 text-primary" />
@@ -114,7 +115,7 @@ export default function PricingSection() {
             <CardContent className="flex flex-col gap-3">
               <ul className="space-y-2">
                 {[
-                  { label: `${plan.credits} Credits`, included: true },
+                  { label: `${plan.description}`, included: true },
                   {
                     label: "Full Access to Services",
                     included: plan.price > 0,
@@ -125,7 +126,7 @@ export default function PricingSection() {
                   },
                   {
                     label: "Priority Updates",
-                    included: plan.name === "Premium",
+                    included: plan.name.includes("Premium"),
                   },
                 ].map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
@@ -137,7 +138,7 @@ export default function PricingSection() {
                     <span
                       className={
                         f.included
-                          ? "text-gray-800"
+                          ? "text-gray-700"
                           : "text-gray-400 line-through"
                       }
                     >
@@ -152,16 +153,15 @@ export default function PricingSection() {
                 disabled={plan.price === 0 || loadingPlan === plan.id}
                 onClick={() => handlePurchase(plan)}
                 className={cn(
-                  "mt-4 rounded-xl w-full font-semibold",
-                  plan.price === 0
-                    ? "text-primary bg-transparent cursor-not-allowed border border-primary"
-                    : "bg-primary text-white hover:bg-primary/90"
+                  "bg-primary hover:bg-primary/90 mt-4 rounded-xl w-full font-semibold text-white",
+                  plan.price === 0 &&
+                    "text-primary bg-transparent hover:bg-gray-300 cursor-not-allowed"
                 )}
               >
                 {loadingPlan === plan.id
                   ? "Processing..."
                   : plan.price === 0
-                  ? "Free Plan"
+                  ? "Current Plan"
                   : "Buy Credits"}
               </Button>
             </CardContent>

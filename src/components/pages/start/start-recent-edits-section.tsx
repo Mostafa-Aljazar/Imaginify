@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useState, useTransition } from "react";
-import { Clock, ImageIcon, Search } from "lucide-react";
+import {
+  AlertTriangle,
+  Clock,
+  ImageIcon,
+  Loader2,
+  Search,
+  SearchX,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -73,12 +80,26 @@ export default function StartRecentEditsSection() {
         </div>
       </div>
 
-      {error && <p className="text-red-600 text-sm text-center">{error}</p>}
       {isPending && !error && (
-        <p className="text-gray-500 text-sm text-center">Loading...</p>
+        <div className="flex flex-col justify-center items-center bg-gray-50 py-10 border border-gray-200 rounded-lg">
+          <Loader2 className="mb-2 w-6 h-6 text-gray-500 animate-spin" />
+          <p className="font-medium text-gray-600 text-sm">Loading edits...</p>
+        </div>
       )}
+
+      {error && (
+        <div className="flex flex-col justify-center items-center bg-red-50 py-10 border border-red-200 rounded-lg">
+          <AlertTriangle className="mb-2 w-6 h-6 text-red-500" />
+          <p className="font-medium text-red-600 text-sm">{error}</p>
+        </div>
+      )}
+
       {!isPending && !error && edits.length === 0 && (
-        <p className="text-gray-500 text-sm text-center">No results found</p>
+        <div className="flex flex-col justify-center items-center bg-gray-50 py-10 border border-gray-200 rounded-lg">
+          <SearchX className="mb-2 w-6 h-6 text-gray-400" />
+          <p className="font-medium text-gray-600 text-sm">No results found</p>
+          <p className="mt-1 text-gray-400 text-xs">Try a different keyword</p>
+        </div>
       )}
 
       <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

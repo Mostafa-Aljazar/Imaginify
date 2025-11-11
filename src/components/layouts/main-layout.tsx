@@ -10,10 +10,10 @@ export default function Main_Layout({
   return (
     <>
       <Header />
-      {children}
+      <div className="min-h-screen"> {children}</div>
       <Toaster />
 
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }
