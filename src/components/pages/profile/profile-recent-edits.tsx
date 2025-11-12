@@ -10,7 +10,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useUserStore } from "@/stores/store-user-data";
-import { Clock, History, ImageIcon, Loader, Trash2 } from "lucide-react";
+import {
+  Clock,
+  Download,
+  History,
+  ImageIcon,
+  Loader,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 
 export default function Profile_Recent_Edits() {
@@ -37,13 +44,6 @@ export default function Profile_Recent_Edits() {
     setModalOpen(true);
   };
 
-  // const confirmDelete = () => {
-  //   if (!selectedEdit || !user) return;
-  //   removeTransformation(selectedEdit);
-  //   setModalOpen(false);
-  //   setSelectedEdit(null);
-  // };
-
   const confirmDelete = async () => {
     if (!selectedEdit || !user) return;
     setIsDeleting(true);
@@ -67,6 +67,25 @@ export default function Profile_Recent_Edits() {
     }
   };
 
+  const handleDownload = async (url: string) => {
+    if (!url) return;
+
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `transformed_${Date.now()}.png`; // filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Failed to download image", err);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <h2 className="flex items-center gap-2 font-semibold text-primary text-2xl">
@@ -83,29 +102,27 @@ export default function Profile_Recent_Edits() {
             >
               {/* Thumbnail */}
               <div className="relative flex justify-center w-full h-48 overflow-hidden">
-                {/* <Image
-                  src={edit.thumb as string}
-                  alt={edit.title}
-                  fill
-                  className="object-cover group-hover:scale-110_ transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                /> */}
-
-                  <img
+                <img
                   src={edit.thumb as string}
                   alt={edit.title}
                   className="h-full object-cover group-hover:scale-110_ transition-transform duration-300"
                 />
-                
-                {/* Delete Icon */}
+
                 <button
-                  className="top-2 right-2 !z-10 absolute hover:bg-gray-50/50 p-1 rounded-full text-red-500 transition-colors hover:cursor-pointer"
+                  className="top-2 left-2 absolute flex justify-center items-center bg-black/10 bg-opacity-60 hover:bg-opacity-80 p-1 rounded-full w-7 h-7 text-red-500"
                   onClick={() => handleDelete(edit.id)}
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 size={20} />
                 </button>
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <button
+                  type="button"
+                  onClick={() => handleDownload(edit.thumb as string)}
+                  className="top-2 right-2 absolute flex justify-center items-center bg-black/60 bg-opacity-60 hover:bg-opacity-80 p-1 rounded-full w-5 h-5 text-white"
+                >
+                  <Download size={16} />
+                </button>
+                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" /> */}
               </div>
 
               {/* Info */}
