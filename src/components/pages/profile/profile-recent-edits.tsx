@@ -83,13 +83,20 @@ export default function Profile_Recent_Edits() {
             >
               {/* Thumbnail */}
               <div className="relative flex justify-center w-full h-48 overflow-hidden">
-                <Image
+                {/* <Image
                   src={edit.thumb as string}
                   alt={edit.title}
                   fill
                   className="object-cover group-hover:scale-110_ transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, 33vw"
+                /> */}
+
+                  <img
+                  src={edit.thumb as string}
+                  alt={edit.title}
+                  className="h-full object-cover group-hover:scale-110_ transition-transform duration-300"
                 />
+                
                 {/* Delete Icon */}
                 <button
                   className="top-2 right-2 !z-10 absolute hover:bg-gray-50/50 p-1 rounded-full text-red-500 transition-colors hover:cursor-pointer"
