@@ -9,6 +9,5 @@ export async function GET(req: NextRequest) {
         where: { clerkId: userClerkId },
         include: { transformations: true },
     });
-    // console.log("🚀 ~ GET ~ user:", user)
     return NextResponse.json(user);
 }

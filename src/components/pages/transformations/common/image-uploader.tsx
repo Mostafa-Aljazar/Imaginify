@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 export default function Image_Uploader() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  console.log("🚀 ~ ImageUploader ~ imageUrl:", imageUrl);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -21,7 +20,6 @@ export default function Image_Uploader() {
       });
 
       const data = await response.json();
-      console.log("🚀 ~ handleFileChange ~ data:", data);
 
       if (data.url) {
         setImageUrl(data.url);

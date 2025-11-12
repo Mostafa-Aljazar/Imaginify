@@ -35,24 +35,20 @@ export async function POST(req: NextRequest) {
         let product: Stripe.Product;
         if (existingProducts.data.length > 0) {
             product = existingProducts.data[0];
-            console.log(`Found existing product ID: ${product.id}`);
 
             if (!product.active) {
                 try {
                     await stripe.products.update(product.id, {
                         active: true,
                     });
-                    console.log(`Activated product ID: ${product.id}`);
                 } catch (error: any) {
                     if (error.type === 'StripeInvalidRequestError' && error.message.includes('cannot be updated')) {
-                        console.log(`Product ${product.id} is Stripe-managed and cannot be updated. Creating new product.`);
                         product = await stripe.products.create({
                             name: `${item.name} (${new Date().toISOString().split('T')[0]})`,
                             description: item.description,
                             metadata: { credits: item.credits.toString(), app: 'imaginify' },
                             active: true,
                         });
-                        console.log(`Created new product ID: ${product.id}`);
                     } else {
                         throw error;
                     }
@@ -65,9 +61,7 @@ export async function POST(req: NextRequest) {
                 metadata: { credits: item.credits.toString(), app: 'imaginify' },
                 active: true,
             });
-            console.log(`Created new product ID: ${product.id}`);
         }
-        console.log("🚀 ~ POST ~ product:", product);
 
         // List active prices for the product
         const existingPrices = await stripe.prices.list({
@@ -84,16 +78,13 @@ export async function POST(req: NextRequest) {
 
         if (matchingPrice) {
             price = matchingPrice;
-            console.log(`Using existing price ID: ${price.id}`);
         } else {
             price = await stripe.prices.create({
                 product: product.id,
                 unit_amount: Math.round(item.price * 100),
                 currency: 'usd',
             });
-            console.log(`Created price ID: ${price.id}`);
         }
-        console.log("🚀 ~ POST ~ price:", price);
 
         // Create Checkout Session
         const session = await stripe.checkout.sessions.create({

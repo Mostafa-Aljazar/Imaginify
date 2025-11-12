@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, User } from "lucide-react";
 import { ROUTES } from "@/constants";
+import { useAuth } from "@clerk/nextjs";
+import { useUserStore } from "@/stores/store-user-data";
 
 interface PaymentDetails {
   status: string;
@@ -21,6 +23,9 @@ export default function SuccessPage() {
   const [details, setDetails] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const { userId } = useAuth();
+  const { fetchUser } = useUserStore();
+
   useEffect(() => {
     if (!sessionId) {
       setLoading(false);
@@ -35,6 +40,8 @@ export default function SuccessPage() {
         if (!res.ok) throw new Error("Failed to verify session");
         const data: PaymentDetails = await res.json();
         setDetails(data);
+        if (!userId) return;
+        fetchUser(userId);
       } catch (err) {
         console.error(err);
       } finally {
@@ -43,7 +50,7 @@ export default function SuccessPage() {
     };
 
     fetchDetails();
-  }, [sessionId]);
+  }, [sessionId, userId]);
 
   if (loading) {
     return (

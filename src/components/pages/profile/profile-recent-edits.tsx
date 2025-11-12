@@ -53,7 +53,6 @@ export default function Profile_Recent_Edits() {
       });
 
       const result = await res.json();
-      console.log("🚀 ~ confirmDelete ~ result:", result);
 
       if (!res.ok) throw new Error(result.error || "Failed to delete");
 

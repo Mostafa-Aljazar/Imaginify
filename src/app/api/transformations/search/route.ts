@@ -54,9 +54,6 @@ export async function GET(req: NextRequest) {
 
         const totalPages = Math.ceil(total / limit);
 
-        console.log(
-            `Search completed: query=${q}, results=${dbResults.length}, page=${page}`
-        );
 
         return NextResponse.json({
             success: true,

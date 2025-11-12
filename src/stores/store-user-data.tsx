@@ -29,6 +29,7 @@ export const useUserStore = create<UserStore>((set) => ({
     const data = await res.json();
     if (data) set({ user: data });
   },
+
   addTransformation: (transformation: Transformation) =>
     set((prev) => ({
       user: prev.user

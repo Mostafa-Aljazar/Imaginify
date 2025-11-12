@@ -69,10 +69,6 @@ export default function useCloudinaryUpload() {
                     throw new Error("Unknown transformation type");
             }
 
-            console.log("🚀 ~ handleSubmit ~ transformation:", transformation)
-            // console.log("🚀 ~ uploadImage ~ values.title:", values.title)
-            // console.log("🚀 ~ handleSubmit ~ TransformationType[type]:", TransformationType[type])
-
             const formData = new FormData();
             formData.append("file", file);
             formData.append("transformation", JSON.stringify(transformation));

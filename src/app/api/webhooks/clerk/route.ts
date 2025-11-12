@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(req: NextRequest) {
     try {
         const evt = await verifyWebhook(req)
-        console.log("🚀 ~ POST ~type of evt:", evt.type)
 
         if (evt.type === 'user.created') {
             const { id: clerkId, email_addresses, first_name, last_name, username } = evt.data
@@ -22,7 +21,6 @@ export async function POST(req: NextRequest) {
                 },
             })
 
-            console.log("🚀 ~ POST ~✅ User created:", clerkId)
 
         } else if (evt.type === 'user.updated') {
             const { id: clerkId, email_addresses, first_name, last_name, username } = evt.data
@@ -37,7 +35,6 @@ export async function POST(req: NextRequest) {
                 },
             })
 
-            console.log("🚀 ~ POST ~✅ User updated:", clerkId)
 
         }
 

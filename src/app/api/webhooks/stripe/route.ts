@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
         case 'checkout.session.completed':
             const session = event.data.object as Stripe.Checkout.Session;
-            console.log('✅ Checkout session completed:', session.id);
 
             try {
                 // Check if this webhook has already been processed
