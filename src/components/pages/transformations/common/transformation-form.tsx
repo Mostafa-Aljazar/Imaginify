@@ -24,6 +24,7 @@ import { DragEvent, useState } from "react";
 import { AlertCircle, CreditCard, Download, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import useCloudinaryUpload from "@/hooks/useCloudinaryUpload";
+import Image from "next/image";
 import { ROUTES, TransformationType } from "@/constants";
 import { useUserStore } from "@/stores/store-user-data";
 import { useRouter } from "next/navigation";
@@ -207,9 +208,10 @@ export function TransformationForm({
                   </div>
                 ) : (
                   <>
-                    <img
+                    <Image
                       src={URL.createObjectURL(file)}
                       alt="Uploaded"
+                      fill
                       className="absolute inset-0 rounded-xl w-full h-full object-contain"
                     />
 
@@ -274,10 +276,12 @@ export function TransformationForm({
 
                 {!loading && url && (
                   <>
-                    <img
+                    <Image
                       src={url}
                       alt="Transformed"
+                      fill
                       className="rounded-xl w-full h-64 object-contain"
+                      sizes="(max-width: 640px) 100vw, 50vw"
                     />
 
                     <button

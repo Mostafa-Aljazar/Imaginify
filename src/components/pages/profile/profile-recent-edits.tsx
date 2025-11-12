@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -82,10 +83,12 @@ export default function Profile_Recent_Edits() {
             >
               {/* Thumbnail */}
               <div className="relative flex justify-center w-full h-48 overflow-hidden">
-                <img
+                <Image
                   src={edit.thumb as string}
                   alt={edit.title}
-                  className="h-full object-cover group-hover:scale-110_ transition-transform duration-300"
+                  fill
+                  className="object-cover group-hover:scale-110_ transition-transform duration-300"
+                  sizes="(max-width: 640px) 100vw, 33vw"
                 />
                 {/* Delete Icon */}
                 <button

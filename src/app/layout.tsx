@@ -39,6 +39,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Preconnect to important origins to speed up LCP and resource fetches */}
+        <link rel="preconnect" href="https://imaginify-1pla.vercel.app" />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link
+          rel="preconnect"
+          href="https://accounts.dev"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${InterFont.variable} antialiased`}>
         <Main_Provider>
           <Main_Layout>{children}</Main_Layout>

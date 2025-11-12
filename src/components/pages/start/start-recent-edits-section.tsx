@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useTransition } from "react";
+import Image from "next/image";
 import {
   AlertTriangle,
   Clock,
@@ -110,10 +111,12 @@ export default function StartRecentEditsSection() {
           >
             <div className="relative flex justify-center w-full h-48 overflow-hidden">
               {edit.url ? (
-                <img
+                <Image
                   src={edit.url}
                   alt={edit.title}
-                  className="h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
                 <div className="flex justify-center items-center bg-gray-200 w-full h-full">

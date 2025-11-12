@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function Image_Uploader() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -43,18 +44,21 @@ export default function Image_Uploader() {
         {loading ? "Uploading..." : "Upload"}
       </button>
       {file && (
-        <img
-          src={URL.createObjectURL(file)}
-          alt="Processed"
-          width={100}
-          height={100}
-        />
+        <div style={{ width: 100, height: 100, position: "relative" }}>
+          <Image
+            src={URL.createObjectURL(file)}
+            alt="Processed"
+            width={100}
+            height={100}
+            className="rounded object-cover"
+          />
+        </div>
       )}
 
       {imageUrl && (
         <div>
           <h3>Image with Background Removed:</h3>
-          <img src={imageUrl} alt="Processed" width={100} height={100} />
+          <Image src={imageUrl} alt="Processed" width={100} height={100} />
         </div>
       )}
     </div>
