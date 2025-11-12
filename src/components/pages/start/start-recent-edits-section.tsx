@@ -109,6 +109,20 @@ export default function StartRecentEditsSection() {
             key={edit.id}
             className="flex flex-col bg-white shadow-md hover:shadow-lg rounded-xl overflow-hidden transition"
           >
+            {/* <div className="relative flex justify-center w-full h-48 overflow-hidden">
+              {edit.url ? (
+                <img
+                  src={edit.url}
+                  alt={edit.title}
+                  className="h-full object-cover"
+                />
+              ) : (
+                <div className="flex justify-center items-center bg-gray-200 w-full h-full">
+                  <p className="text-gray-500">No Image</p>
+                </div>
+              )}
+            </div> */}
+            
             <div className="relative flex justify-center w-full h-48 overflow-hidden">
               {edit.url ? (
                 <Image
@@ -116,7 +130,7 @@ export default function StartRecentEditsSection() {
                   alt={edit.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="h-full object-cover"
                 />
               ) : (
                 <div className="flex justify-center items-center bg-gray-200 w-full h-full">
