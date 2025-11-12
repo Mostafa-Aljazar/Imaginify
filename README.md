@@ -24,5 +24,5 @@ Imaginify is a modern, AI-powered single-page application (SPA) for image genera
 ```bash
 git clone https://github.com/Mostafa-Aljazar/Imaginify.git
 cd Imaginify
-npm install
-npm run dev
+pnpm install
+pnpm run dev
